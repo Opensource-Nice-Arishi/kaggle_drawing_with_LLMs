@@ -165,7 +165,7 @@ def create_latents_from_embedding(embedding: torch.Tensor, target_shape: tuple, 
         if channel_std > 1e-8:  # Avoid division by zero
             latent[:, c:c+1, :, :] = (channel - channel_mean) / channel_std
     
-    noise_ratio = 0.95
+    noise_ratio = 0.99
     noise = torch.randn_like(latent)
     # Mix the original structured latent with random noise
     latent = latent * (1 - noise_ratio) + noise * noise_ratio
@@ -664,13 +664,13 @@ img, svg = generate_svg_with_guidance(
     description=description,
     device=device,
     # --- Strength parameter for blending structured and random noise ---
-    strength=1.0, # 1.0 is pure noise, 0.0 is pure structure
+    strength=0.99, # 1.0 is pure noise, 0.0 is pure structure
     num_inference_steps=15,
     guidance_scale=20,
     vector_guidance_scale=4.5,
     # ToDo: parameter adjustment
-    lpips_mse_lambda=0.1, 
-    clip_guidance_scale=0.0, 
+    lpips_mse_lambda=1.0, 
+    clip_guidance_scale=1.1, 
     # ToDo-End: parameter adjustment
     guidance_start_step=0,
     guidance_end_step=15,
